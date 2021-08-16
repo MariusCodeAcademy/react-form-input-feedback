@@ -1,7 +1,8 @@
 import { useState, useRef } from "react";
 const SimpleInput = (props) => {
   const [enteredName, setEnteredName] = useState("");
-  const [enteredNameIsValid, setEnteredNameIsValid] = useState(true);
+  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
 
   const nameInputRef = useRef();
 
@@ -12,6 +13,9 @@ const SimpleInput = (props) => {
   const formSubmissionHandler = (event) => {
     // sustabdyti forma nuo siuntimo nustatytuoju budu
     event.preventDefault();
+
+    // formos siuntimas reiskia kad visi laukai yra paliesti
+    setEnteredNameTouched(true);
 
     // validacija
     if (enteredName.trim() === "") {
@@ -29,9 +33,12 @@ const SimpleInput = (props) => {
     setEnteredNameIsValid(true);
     // nameInputRef.current.value = '' // nerekomenduojam updatinti dom rankiniu budu
   };
-  const nameInputClasses = enteredNameIsValid
-    ? "form-control"
-    : "form-control invalid";
+
+  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+
+  const nameInputClasses = nameInputIsInvalid
+    ? "form-control invalid"
+    : "form-control";
 
   return (
     <form onSubmit={formSubmissionHandler}>
@@ -44,7 +51,7 @@ const SimpleInput = (props) => {
           type="text"
           id="name"
         />
-        {!enteredNameIsValid && (
+        {nameInputIsInvalid && (
           <p className="error-text">Name must not be empty</p>
         )}
       </div>
