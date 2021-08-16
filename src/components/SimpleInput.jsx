@@ -9,6 +9,10 @@ const SimpleInput = (props) => {
   const nameInputChangeHandler = (event) => {
     console.log("keystroke");
     setEnteredName(event.target.value);
+    // jei ivesta kazkas tai reiskia laukas yra valid
+    if (event.target.value.trim() !== "") {
+      setEnteredNameIsValid(true);
+    }
   };
   const formSubmissionHandler = (event) => {
     // sustabdyti forma nuo siuntimo nustatytuoju budu
@@ -33,6 +37,15 @@ const SimpleInput = (props) => {
     setEnteredNameIsValid(true);
     // nameInputRef.current.value = '' // nerekomenduojam updatinti dom rankiniu budu
   };
+  const nameInputBlurHandler = (event) => {
+    setEnteredNameTouched(true);
+    // validacija
+    if (event.target.value.trim() === "") {
+      setEnteredNameIsValid(false);
+      return;
+    }
+    setEnteredNameIsValid(true);
+  };
 
   const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
@@ -48,6 +61,7 @@ const SimpleInput = (props) => {
           ref={nameInputRef}
           value={enteredName}
           onChange={nameInputChangeHandler}
+          onBlur={nameInputBlurHandler}
           type="text"
           id="name"
         />
