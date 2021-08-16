@@ -1,18 +1,15 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 const SimpleInput = (props) => {
   const [enteredName, setEnteredName] = useState("");
+  // const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
-  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
 
-  const nameInputRef = useRef();
+  const enteredNameIsValid = enteredName.trim() !== "";
+  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
   const nameInputChangeHandler = (event) => {
     console.log("keystroke");
     setEnteredName(event.target.value);
-    // jei ivesta kazkas tai reiskia laukas yra valid
-    if (event.target.value.trim() !== "") {
-      setEnteredNameIsValid(true);
-    }
   };
   const formSubmissionHandler = (event) => {
     // sustabdyti forma nuo siuntimo nustatytuoju budu
@@ -22,32 +19,21 @@ const SimpleInput = (props) => {
     setEnteredNameTouched(true);
 
     // validacija
-    if (enteredName.trim() === "") {
-      setEnteredNameIsValid(false);
+    if (!enteredNameIsValid) {
       return;
     }
 
-    console.log("SubmitEvent");
-    console.log("ivesta", enteredName);
-    // naudojant ref gauti ivesties lauko reiksme
-    const enteredValue = nameInputRef.current.value;
-    console.log("value using ref", enteredValue);
     // isvalyti input po submit
     setEnteredName("");
-    setEnteredNameIsValid(true);
-    // nameInputRef.current.value = '' // nerekomenduojam updatinti dom rankiniu budu
+    setEnteredNameTouched(false);
   };
   const nameInputBlurHandler = (event) => {
     setEnteredNameTouched(true);
     // validacija
-    if (event.target.value.trim() === "") {
-      setEnteredNameIsValid(false);
+    if (!enteredNameIsValid) {
       return;
     }
-    setEnteredNameIsValid(true);
   };
-
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
   const nameInputClasses = nameInputIsInvalid
     ? "form-control invalid"
@@ -58,7 +44,6 @@ const SimpleInput = (props) => {
       <div className={nameInputClasses}>
         <label htmlFor="name">Your Name</label>
         <input
-          ref={nameInputRef}
           value={enteredName}
           onChange={nameInputChangeHandler}
           onBlur={nameInputBlurHandler}
