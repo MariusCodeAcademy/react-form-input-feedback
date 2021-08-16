@@ -9,6 +9,10 @@ const SimpleInput = (props) => {
   const formSubmissionHandler = (event) => {
     // sustabdyti forma nuo siuntimo nustatytuoju budu 
     event.preventDefault();
+
+    // validacija
+    if (enteredName.trim() === '') return; 
+
     console.log('SubmitEvent');
     console.log('ivesta', enteredName);
     // naudojant ref gauti ivesties lauko reiksme
