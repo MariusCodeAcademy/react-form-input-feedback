@@ -4,7 +4,10 @@ import useInput from "../hook/use-input";
 // 6. extra kas pasidaret pasidaryti kad name butu tik raides ir tarpai
 // 8. Kas viska pasidare, pabandyti sukurti Input komponenta su visa sita logika kuris veikia
 // per props
-const nameValidation = (x) => x.trim().length >= 3;
+const nameValidation = (x) => {
+  return x.trim().length >= 3;
+};
+const emailValidation = (e) => e.includes("@") && e.includes(".");
 
 const SimpleInput = (props) => {
   const {
@@ -16,31 +19,22 @@ const SimpleInput = (props) => {
     reset: resetNameInput,
   } = useInput(nameValidation);
 
-  // email
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
+  const {
+    value: enteredEmail,
+    hasError: emailInputHasError,
+    isValid: enteredEmailIsValid,
+    valueChangeHandler: emailChangeHandler,
+    valueBlurHandler: emailBlurHandler,
+    reset: resetEmailInput,
+  } = useInput(emailValidation);
 
   const [formIsValid, setFormIsValid] = useState(false);
-
-  // email
-  const enteredEmailIsValid =
-    enteredEmail.includes("@") && enteredEmail.includes(".");
-  const emailInputHasError = !enteredEmailIsValid && enteredEmailTouched;
 
   useEffect(() => {
     enteredNameIsValid && enteredEmailIsValid
       ? setFormIsValid(true)
       : setFormIsValid(false);
   }, [enteredNameIsValid, enteredEmailIsValid]);
-
-  // email
-  const emailInputChangeHandler = (event) => {
-    console.log("keystroke");
-    setEnteredEmail(event.target.value);
-  };
-  const emailInputBlurHandler = (event) => {
-    setEnteredEmailTouched(true);
-  };
 
   const formSubmissionHandler = (event) => {
     // sustabdyti forma nuo siuntimo nustatytuoju budu
@@ -53,9 +47,7 @@ const SimpleInput = (props) => {
 
     // isvalyti input po submit
     resetNameInput();
-
-    setEnteredEmail("");
-    setEnteredEmailTouched(false);
+    resetEmailInput();
 
     console.log(enteredName, enteredEmail);
   };
@@ -88,8 +80,8 @@ const SimpleInput = (props) => {
         <label htmlFor="email">Your Email</label>
         <input
           value={enteredEmail}
-          onChange={emailInputChangeHandler}
-          onBlur={emailInputBlurHandler}
+          onChange={emailChangeHandler}
+          onBlur={emailBlurHandler}
           type="text"
           id="email"
         />
