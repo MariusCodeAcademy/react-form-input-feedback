@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 // 6. extra kas pasidaret pasidaryti kad name butu tik raides ir tarpai
-// 7. nepamirsti isvalyti email ivesties lauku ir palietimo busenos kai submitinam
 // 8. Kas viska pasidare, pabandyti sukurti Input komponenta su visa sita logika kuris veikia
 // per props
 const SimpleInput = (props) => {
