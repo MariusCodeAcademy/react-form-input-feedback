@@ -17,7 +17,7 @@ const BasicForm = (props) => {
 
   useEffect(() => {
     setFormIsValid(nameIsValid);
-  });
+  }, [nameIsValid]);
 
   // computed Classes
   const nameClasses = nameHasError ? "form-control invalid" : "form-control";
