@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 const SimpleInput = (props) => {
   const [enteredName, setEnteredName] = useState("");
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+
   const [formIsValid, setFormIsValid] = useState(false);
 
-  const enteredNameIsValid = enteredName.trim() !== "";
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+  // prideti email input, ir ji pavaliduoti prie esamos logikos
+  // email turi tureti @ ir taska po @. mail@gmail.com value.includes('.')
+
+  const enteredNameIsValid = enteredName.trim().length >= 3;
+  const nameInputHasError = !enteredNameIsValid && enteredNameTouched;
 
   useEffect(() => {
     enteredNameIsValid ? setFormIsValid(true) : setFormIsValid(false);
@@ -14,6 +18,9 @@ const SimpleInput = (props) => {
   const nameInputChangeHandler = (event) => {
     console.log("keystroke");
     setEnteredName(event.target.value);
+  };
+  const nameInputBlurHandler = (event) => {
+    setEnteredNameTouched(true);
   };
   const formSubmissionHandler = (event) => {
     // sustabdyti forma nuo siuntimo nustatytuoju budu
@@ -31,15 +38,9 @@ const SimpleInput = (props) => {
     setEnteredName("");
     setEnteredNameTouched(false);
   };
-  const nameInputBlurHandler = (event) => {
-    setEnteredNameTouched(true);
-    // validacija
-    if (!enteredNameIsValid) {
-      return;
-    }
-  };
 
-  const nameInputClasses = nameInputIsInvalid
+  // computed classes
+  const nameInputClasses = nameInputHasError
     ? "form-control invalid"
     : "form-control";
 
@@ -54,8 +55,8 @@ const SimpleInput = (props) => {
           type="text"
           id="name"
         />
-        {nameInputIsInvalid && (
-          <p className="error-text">Name must not be empty</p>
+        {nameInputHasError && (
+          <p className="error-text">Name must be at least 3 letters</p>
         )}
       </div>
       <div className="form-actions">
