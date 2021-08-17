@@ -7,8 +7,8 @@ const BasicForm = (props) => {
           <input type='text' id='name' />
         </div>
         <div className='form-control'>
-          <label htmlFor='name'>Last Name</label>
-          <input type='text' id='name' />
+          <label htmlFor='name'>Password</label> 
+          <input type='password' id='name' />
         </div>
       </div>
       <div className='form-control'>
