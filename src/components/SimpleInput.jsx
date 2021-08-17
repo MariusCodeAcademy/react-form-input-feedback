@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
+import useInput from "../hook/use-input";
 
 // 6. extra kas pasidaret pasidaryti kad name butu tik raides ir tarpai
 // 8. Kas viska pasidare, pabandyti sukurti Input komponenta su visa sita logika kuris veikia
 // per props
+const nameValidation = (x) => x.trim().length >= 3;
+
 const SimpleInput = (props) => {
-  const [enteredName, setEnteredName] = useState("");
-  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+  const {
+    value: enteredName,
+    hasError: nameInputHasError,
+    isValid: enteredNameIsValid,
+    valueChangeHandler: nameChangeHandler,
+    valueBlurHandler: nameBlurHandler,
+    reset: resetNameInput,
+  } = useInput(nameValidation);
+
   // email
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
 
   const [formIsValid, setFormIsValid] = useState(false);
 
-  // prideti email input, ir ji pavaliduoti prie esamos logikos
-  // email turi tureti @ ir taska po @. mail@gmail.com value.includes('.')
-
-  const enteredNameIsValid = enteredName.trim().length >= 3;
-  const nameInputHasError = !enteredNameIsValid && enteredNameTouched;
   // email
   const enteredEmailIsValid =
     enteredEmail.includes("@") && enteredEmail.includes(".");
@@ -28,13 +33,6 @@ const SimpleInput = (props) => {
       : setFormIsValid(false);
   }, [enteredNameIsValid, enteredEmailIsValid]);
 
-  const nameInputChangeHandler = (event) => {
-    console.log("keystroke");
-    setEnteredName(event.target.value);
-  };
-  const nameInputBlurHandler = (event) => {
-    setEnteredNameTouched(true);
-  };
   // email
   const emailInputChangeHandler = (event) => {
     console.log("keystroke");
@@ -48,17 +46,14 @@ const SimpleInput = (props) => {
     // sustabdyti forma nuo siuntimo nustatytuoju budu
     event.preventDefault();
 
-    // formos siuntimas reiskia kad visi laukai yra paliesti
-    setEnteredNameTouched(true);
-
     // validacija
     if (!formIsValid) {
       return;
     }
 
     // isvalyti input po submit
-    setEnteredName("");
-    setEnteredNameTouched(false);
+    resetNameInput();
+
     setEnteredEmail("");
     setEnteredEmailTouched(false);
 
@@ -80,8 +75,8 @@ const SimpleInput = (props) => {
         <label htmlFor="name">Your Name</label>
         <input
           value={enteredName}
-          onChange={nameInputChangeHandler}
-          onBlur={nameInputBlurHandler}
+          onChange={nameChangeHandler}
+          onBlur={nameBlurHandler}
           type="text"
           id="name"
         />
