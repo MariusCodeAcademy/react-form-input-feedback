@@ -1,15 +1,23 @@
-import { useState } from "react";
-const SimpleInput = (props) => {
+import { useEffect, useState } from "react";
+const InputDebounce = (props) => {
   const [enteredName, setEnteredName] = useState("");
+  const [nameIsValid, setNameIsValid] = useState(true);
+  const [nameIsTouched, setNameIsTouched] = useState(false);
 
   const nameInputChangeHandler = (event) => {
-    console.log("keystroke");
     setEnteredName(event.target.value);
+    setNameIsTouched(true);
   };
+
+  useEffect(() => {
+    console.log("Validity Check");
+    if (!nameIsTouched) return;
+    setNameIsValid(enteredName.trim().length >= 3);
+  }, [enteredName, nameIsTouched]);
 
   return (
     <form>
-      <div className="form-control">
+      <div className={"form-control " + (nameIsValid ? "" : "invalid")}>
         <label htmlFor="name">Your Name</label>
         <input
           value={enteredName}
@@ -19,10 +27,10 @@ const SimpleInput = (props) => {
         />
       </div>
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!nameIsValid}>Submit</button>
       </div>
     </form>
   );
 };
 
-export default SimpleInput;
+export default InputDebounce;
